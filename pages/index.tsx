@@ -1,86 +1,140 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
+import { useState } from "react";
+import { Todos } from "../components/Todos";
+import { Form } from "../components/Form";
+import { GetServerSideProps } from "next";
+import { Task } from "../types";
+import { PrismaClient } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import Layout from "../components/layout";
 
-const Home: NextPage = () => {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+const prisma = new PrismaClient();
 
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
+const Home = ({ allTodos }: { allTodos: Task[] }) => {
+  const [todos, setTodos] = useState(allTodos);
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">
-            pages/index.tsx
-          </code>
-        </p>
-
-        <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and its API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+  if (status === "loading") {
+    return (
+      <div
+        role="status"
+        className="max-w-md p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700"
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+            <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+          </div>
+          <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
         </div>
-      </main>
+        <div className="flex items-center justify-between pt-4">
+          <div>
+            <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+            <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+          </div>
+          <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+        </div>
+        <div className="flex items-center justify-between pt-4">
+          <div>
+            <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+            <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+          </div>
+          <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+        </div>
+        <div className="flex items-center justify-between pt-4">
+          <div>
+            <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+            <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+          </div>
+          <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+        </div>
+        <div className="flex items-center justify-between pt-4">
+          <div>
+            <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+            <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+          </div>
+          <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+        </div>
+        <span className="sr-only">Loading...</span>
+      </div>
+    );
+  } else if (status !== "authenticated") {
+    router.push("/login");
+  }
+  const handleRemove = async (id: string) => {
+    const response = await fetch("api/todos/finishTodo", {
+      method: "PUT",
+      body: JSON.stringify(id),
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    const newTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(newTodos);
+  };
 
-      <footer className="flex h-24 w-full items-center justify-center border-t">
-        <a
-          className="flex items-center justify-center gap-2"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-        </a>
-      </footer>
-    </div>
-  )
-}
+  const handleCompleted = async ({
+    id,
+    finished,
+  }: Pick<Task, "id" | "finished">) => {
+    const response = await fetch("/api/todos/completeTodo", {
+      method: "PUT",
+      body: JSON.stringify({
+        id: id,
+        finished: finished,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    const newTodos = todos.map((todo) =>
+      todo.id === id ? { ...todo, finished: finished } : todo
+    );
 
-export default Home
+    setTodos(newTodos);
+  };
+
+  const handleAdd = async (task: string) => {
+    const response = await fetch("/api/todos/addTodo", {
+      method: "POST",
+      body: JSON.stringify(task),
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    const newTodo = await response.json();
+    setTodos([...todos, newTodo]);
+  };
+
+  return (
+    <>
+      <h1 className="font-bold text-2xl px-8 py-3">
+        ZIALE<span className="font-light">TASKS</span>
+      </h1>
+
+      <Layout>
+        <div className="pb-10 flex justify-center">
+          <Form onHandleAdd={handleAdd} />
+          <Todos
+            todos={todos}
+            onRemoveTodo={handleRemove}
+            onHandleCompleted={handleCompleted}
+          />
+        </div>
+      </Layout>
+    </>
+  );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const allTodos = await prisma.toDo.findMany();
+
+  return {
+    props: {
+      allTodos: JSON.parse(JSON.stringify(allTodos)),
+    },
+  };
+};
+
+export default Home;
