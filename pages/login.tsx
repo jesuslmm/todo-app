@@ -35,7 +35,7 @@ export default function Login() {
           </button>
           <button
             className="flex mt-2 px-6 py-2 border-2 rounded-lg bg-white border-slate-200 hover:scale-105 transition-all"
-            onClick={() => signIn("github")}
+            onClick={() => signIn("linkedin")}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -46,20 +46,6 @@ export default function Login() {
               <path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z" />
             </svg>
             Log in with Linkedin
-          </button>
-          <button
-            className="flex mt-2 px-5 py-2 border-2 rounded-lg bg-white border-slate-200 hover:scale-105 transition-all"
-            onClick={() => signIn("github")}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-7 w-7 mr-4 text-[#1877f2]"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
-            </svg>{" "}
-            Log in with Facebook
           </button>
         </div>
       </div>

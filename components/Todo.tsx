@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Task, Itodo } from "../types";
 import UseAnimations from "react-useanimations";
 import trash from "react-useanimations/lib/trash";
+import toast from "react-hot-toast";
 
 export const Todo: React.FC<Itodo> = ({
   todo,
@@ -20,6 +21,9 @@ export const Todo: React.FC<Itodo> = ({
 
   const handleRemove = () => {
     onRemoveTodo(todo.id);
+    toast("Task deleted!", {
+      icon: "🗑",
+    });
   };
 
   return (

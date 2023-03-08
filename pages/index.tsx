@@ -7,6 +7,7 @@ import { PrismaClient } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Layout from "../components/layout";
+import { Toaster } from "react-hot-toast";
 
 const prisma = new PrismaClient();
 
@@ -136,6 +137,7 @@ const Home = ({ allTodos }: { allTodos: Task[] }) => {
             onHandleCompleted={handleCompleted}
           />
         </div>
+        <Toaster />
       </Layout>
     </>
   );

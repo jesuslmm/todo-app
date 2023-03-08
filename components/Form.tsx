@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { IForm } from "../types";
+import toast from "react-hot-toast";
 
 export const Form: React.FC<IForm> = ({ onHandleAdd }) => {
   const [value, setValue] = useState("");
@@ -9,6 +10,7 @@ export const Form: React.FC<IForm> = ({ onHandleAdd }) => {
     event.preventDefault();
     onHandleAdd(value);
     setValue("");
+    toast.success("Task added!");
   };
 
   return (
