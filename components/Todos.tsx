@@ -9,8 +9,10 @@ export const Todos: React.FC<ITodos> = ({
   onRemoveTodo,
   onHandleCompleted,
 }) => {
+  //Headers for the tabs
   const TABS = ["All", "Pending", "Completed"];
 
+  //Ref for auto animation
   const [listRef] = useAutoAnimate<HTMLUListElement>();
 
   return (

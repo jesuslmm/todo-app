@@ -16,6 +16,7 @@ const Home = ({ allTodos }: { allTodos: Task[] }) => {
   const router = useRouter();
 
   if (status === "loading") {
+    //return an skeleton
     return (
       <div
         role="status"
@@ -59,9 +60,11 @@ const Home = ({ allTodos }: { allTodos: Task[] }) => {
         <span className="sr-only">Loading...</span>
       </div>
     );
+    //Is not authenticated send it to login page
   } else if (status !== "authenticated") {
     router.push("/login");
   }
+  //Delete a todo
   const handleRemove = async (id: string) => {
     const response = await fetch("api/todos/finishTodo", {
       method: "PUT",
@@ -73,7 +76,7 @@ const Home = ({ allTodos }: { allTodos: Task[] }) => {
     const newTodos = todos.filter((todo) => todo.id !== id);
     setTodos(newTodos);
   };
-
+  //set a todo completed
   const handleCompleted = async ({
     id,
     finished,
@@ -95,6 +98,7 @@ const Home = ({ allTodos }: { allTodos: Task[] }) => {
     setTodos(newTodos);
   };
 
+  //Add a new todo
   const handleAdd = async (task: string) => {
     const response = await fetch("/api/todos/addTodo", {
       method: "POST",
@@ -132,6 +136,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   return {
     props: {
+      //Bad code but is evading the Date() | getServerSideProps error
       allTodos: JSON.parse(JSON.stringify(allTodos)),
     },
   };

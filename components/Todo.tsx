@@ -22,10 +22,6 @@ export const Todo: React.FC<Itodo> = ({
     onRemoveTodo(todo.id);
   };
 
-  useEffect(() => {
-    setData(todo);
-  }, [completed]);
-
   return (
     <li
       key={data.id}

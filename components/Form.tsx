@@ -4,6 +4,7 @@ import { IForm } from "../types";
 export const Form: React.FC<IForm> = ({ onHandleAdd }) => {
   const [value, setValue] = useState("");
 
+  //Send the new todo and reset the value
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onHandleAdd(value);
