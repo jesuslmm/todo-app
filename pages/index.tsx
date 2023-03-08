@@ -16,7 +16,7 @@ const Home = ({ allTodos }: { allTodos: Task[] }) => {
   const router = useRouter();
 
   if (status === "loading") {
-    //return an skeleton
+    //return a skeleton
     return (
       <div
         role="status"
