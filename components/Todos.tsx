@@ -46,6 +46,7 @@ export const Todos: React.FC<ITodos> = ({
             <ul ref={listRef}>
               {todos.map((todo) => (
                 <Todo
+                  key={todo.id}
                   todo={todo}
                   onRemoveTodo={onRemoveTodo}
                   onHandleCompleted={onHandleCompleted}
@@ -64,6 +65,7 @@ export const Todos: React.FC<ITodos> = ({
                 if (todo.finished === false) {
                   return (
                     <Todo
+                      key={todo.id}
                       todo={todo}
                       onRemoveTodo={onRemoveTodo}
                       onHandleCompleted={onHandleCompleted}
@@ -84,6 +86,7 @@ export const Todos: React.FC<ITodos> = ({
                 if (todo.finished == true) {
                   return (
                     <Todo
+                      key={todo.id}
                       todo={todo}
                       onRemoveTodo={onRemoveTodo}
                       onHandleCompleted={onHandleCompleted}
